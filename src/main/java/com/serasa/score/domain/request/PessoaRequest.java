@@ -6,8 +6,10 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
 
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 
 @Getter
 @Setter
@@ -22,7 +24,7 @@ public class PessoaRequest {
     @ApiModelProperty(value = "Telefone da pessoa", required = true)
     private String telefone;
 
-    @NotBlank(message = "idade é um campo obrigatorio")
+    @NotNull(message = "idade é um campo obrigatorio")
     @ApiModelProperty(value = "Idade da pessoa", required = true)
     private Integer idade;
 
@@ -31,7 +33,7 @@ public class PessoaRequest {
     private String cidade;
 
     @ApiModelProperty(value = "Unidade Federativa de residencia da pessoa", required = true)
-    @NotEmpty(message = "estado é um campo obrigatorio")
+    @NotNull(message = "estado é um campo obrigatorio")
     private UnidadeFederacao estado;
 
     @ApiModelProperty(value = "Região geográfica da pessoa", required = true)
@@ -39,7 +41,9 @@ public class PessoaRequest {
     private String regiao;
 
     @ApiModelProperty(value = "Valor do score da pessoa", required = true)
-    @NotBlank(message = "score é um campo obrigatorio")
+    @NotNull(message = "score é um campo obrigatorio")
+    @Max(value = 1000, message = "valor maximo 1000")
+    @Min(value = 0, message = "valor minimo 0")
     private Integer score;
 
 }

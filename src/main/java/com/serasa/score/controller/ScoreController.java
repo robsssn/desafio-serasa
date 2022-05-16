@@ -10,25 +10,25 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import javax.validation.Valid;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 @RestController
-@Api("Score Controller")
+@Api(tags = "Score Controller")
+@RequestMapping("/scores")
 public class ScoreController {
-
-    private static final String API_VERSION = "/v1";
-    private static final String API_ENDPOINT = API_VERSION + "/scores";
 
     @Autowired
     private ScoreService scoreService;
 
     @ApiOperation(value = "Cadastra Score", consumes = APPLICATION_JSON_VALUE)
     @ApiResponse(code = ResponseCodesConsts.UNPROCESSABLE_ENTITY_CODE, message = ResponseCodesConsts.UNPROCESSABLE_ENTITY_MESSAGE)
-    @PostMapping(value = API_ENDPOINT, consumes = APPLICATION_JSON_VALUE)
-    public ResponseEntity postScore(@RequestBody ScoreRequest scoreRequest) {
-
+    @PostMapping(consumes = APPLICATION_JSON_VALUE)
+    public ResponseEntity postScore(@RequestBody @Valid ScoreRequest scoreRequest) {
         return scoreService.createScore(scoreRequest);
     }
 }

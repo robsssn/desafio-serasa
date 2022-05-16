@@ -13,15 +13,14 @@ import javax.persistence.Table;
 @Getter
 @Setter
 @Entity
-@Table(name = "Perfil")
-public class Perfil implements GrantedAuthority {
+@Table(name = "Roles")
+public class Role implements GrantedAuthority {
 
     private static final long serialVersionUID = 1L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
-
+    private Long id;
     private String name;
 
     @Override

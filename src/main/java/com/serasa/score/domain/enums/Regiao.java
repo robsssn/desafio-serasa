@@ -22,6 +22,6 @@ public enum Regiao {
                 return r;
             }
         }
-        throw new Exception("Não encontrou região " + nomeRegiao);
+        throw new Exception("Nome da região inválida " + nomeRegiao);
     }
 }

@@ -10,25 +10,25 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 @RestController
-@Api("Afinadade Controller")
+@Api(tags = "Afinadade Controller")
+@RequestMapping("/afinidades")
 public class AfinidadeController {
-
-    private static final String API_VERSION = "/v1";
-    private static final String API_ENDPOINT = API_VERSION + "/afinidades";
 
     @Autowired
     private AfinidadeService afinidadeService;
 
     @ApiOperation(value = "Cadastra afinidade", consumes = APPLICATION_JSON_VALUE)
     @ApiResponse(code = ResponseCodesConsts.UNPROCESSABLE_ENTITY_CODE, message = ResponseCodesConsts.UNPROCESSABLE_ENTITY_MESSAGE)
-    @PostMapping(value = API_ENDPOINT, consumes = APPLICATION_JSON_VALUE)
+    @PostMapping(consumes = APPLICATION_JSON_VALUE)
     public ResponseEntity cadastrarAfinidade(@RequestBody AfinidadeRequest afinidadeRequest) {
 
         return afinidadeService.cadastrarAfinidade(afinidadeRequest);
     }
+
 }

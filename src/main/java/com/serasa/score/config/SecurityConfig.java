@@ -1,5 +1,9 @@
 package com.serasa.score.config;
 
+import com.serasa.score.repository.UserRepository;
+import com.serasa.score.security.TokenAuthenticationFilter;
+import com.serasa.score.security.service.TokenService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -7,6 +11,7 @@ import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
@@ -18,6 +23,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             "/webjars/**"
     };
 
+    @Autowired
+    private TokenService tokenService;
+
+    @Autowired
+    private UserRepository userRepository;
+
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
 
@@ -27,11 +38,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
                 .antMatchers(HttpMethod.POST, "/auth").permitAll()
-                .antMatchers("/**").permitAll()
-
                 .anyRequest().authenticated()
                 .and().csrf().disable()
-                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+                .cors().disable()
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .and().addFilterBefore(new TokenAuthenticationFilter(tokenService, userRepository),
+                        UsernamePasswordAuthenticationFilter.class);
+
     }
 
     @Override

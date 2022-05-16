@@ -8,7 +8,7 @@ import java.util.Optional;
 
 public interface ScoreRepository extends CrudRepository<Score, Long> {
 
-    @Query("FROM Score WHERE valorInicial >=:scoreValue AND valorFinal <=:scoreValue")
+    @Query("FROM Score WHERE :scoreValue >= valorInicial AND :scoreValue <= valorFinal")
     Optional<Score> buscarScoreEntreValorInicialEFinal(Integer scoreValue);
 
 }

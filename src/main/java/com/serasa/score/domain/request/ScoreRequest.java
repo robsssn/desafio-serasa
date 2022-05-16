@@ -5,8 +5,10 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
 
+import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 @Getter
 @Setter
@@ -17,12 +19,14 @@ public class ScoreRequest {
     @NotBlank
     private String scoreDescricao;
 
-    @ApiModelProperty(value = "Valor inical do score", required = true)
+    @ApiModelProperty(value = "Valor inicial do score", required = true)
     @Min(value = 0)
+    @NotNull
     private Integer valorInicial;
 
     @ApiModelProperty(value = "Valor final do score", required = true)
-    @Min(value = 1000)
+    @Max(value = 1000)
+    @NotNull
     private Integer valorFinal;
 
 }
