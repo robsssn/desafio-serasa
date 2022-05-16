@@ -24,7 +24,7 @@ import java.util.Optional;
 import java.util.logging.Logger;
 
 @ExtendWith(MockitoExtension.class)
-public class PessoaServiceTest {
+class PessoaServiceTest {
 
     @InjectMocks
     private PessoaService pessoaService;
@@ -41,7 +41,7 @@ public class PessoaServiceTest {
     private List<Pessoa> pessoaList;
 
     @BeforeEach
-    public void setup() {
+    void setup() {
         log = Logger.getLogger(getClass().getName());
         pessoaRequest = new PessoaRequest();
         pessoaRequest.setEstado(UnidadeFederacao.AC);
@@ -66,20 +66,20 @@ public class PessoaServiceTest {
     }
 
     @Test
-    public void cadastrarPessoaStatusCreatedTest() {
+    void cadastrarPessoaStatusCreatedTest() {
         ResponseEntity<PessoaResponse> response = pessoaService.cadastrarPessoa(pessoaRequest);
         Assertions.assertEquals(HttpStatus.CREATED.value(), response.getStatusCodeValue());
     }
 
     @Test
-    public void cadastrarPessoaUnprocessableEntityTest() {
+    void cadastrarPessoaUnprocessableEntityTest() {
         pessoaRequest.setRegiao(null);
         ResponseEntity<PessoaResponse> response = pessoaService.cadastrarPessoa(pessoaRequest);
         Assertions.assertEquals(HttpStatus.UNPROCESSABLE_ENTITY.value(), response.getStatusCodeValue());
     }
 
     @Test
-    public void listarPessoasOkTest() {
+    void listarPessoasOkTest() {
         Mockito.when(pessoaRepository.findAll()).thenReturn(pessoaList);
         ResponseEntity<List<PessoaResponse>> response = pessoaService.getPessoas();
         Assertions.assertNotNull(response.getBody());
@@ -87,21 +87,21 @@ public class PessoaServiceTest {
     }
 
     @Test
-    public void listarPessoasNoContentTest() {
+    void listarPessoasNoContentTest() {
         Mockito.when(pessoaRepository.findAll()).thenReturn(Collections.emptyList());
         ResponseEntity<List<PessoaResponse>> response = pessoaService.getPessoas();
         Assertions.assertEquals(HttpStatus.NO_CONTENT.value(), response.getStatusCodeValue());
     }
 
     @Test
-    public void listarPessoasUnprocessableEntityTest() {
+    void listarPessoasUnprocessableEntityTest() {
         Mockito.when(pessoaRepository.findAll()).thenThrow(NullPointerException.class);
         ResponseEntity<List<PessoaResponse>> response = pessoaService.getPessoas();
         Assertions.assertEquals(HttpStatus.UNPROCESSABLE_ENTITY.value(), response.getStatusCodeValue());
     }
 
     @Test
-    public void listarPessoaPorIdOkTest() {
+    void listarPessoaPorIdOkTest() {
         Mockito.when(pessoaRepository.findById(Mockito.anyLong())).thenReturn(Optional.of(pessoa));
         ResponseEntity<PessoaResponse> response = pessoaService.getPessoaById(1L);
         Assertions.assertNotNull(response.getBody());
@@ -109,14 +109,14 @@ public class PessoaServiceTest {
     }
 
     @Test
-    public void listarPessoaPorIdNoContentTest() {
+    void listarPessoaPorIdNoContentTest() {
         Mockito.when(pessoaRepository.findById(Mockito.anyLong())).thenReturn(Optional.empty());
         ResponseEntity<PessoaResponse> response = pessoaService.getPessoaById(1L);
         Assertions.assertEquals(HttpStatus.NO_CONTENT.value(), response.getStatusCodeValue());
     }
 
     @Test
-    public void listarPessoaPorIdUnprocessableEntityTest() {
+    void listarPessoaPorIdUnprocessableEntityTest() {
         Mockito.when(pessoaRepository.findById(Mockito.anyLong())).thenThrow(NullPointerException.class);
         ResponseEntity<PessoaResponse> response = pessoaService.getPessoaById(1L);
         Assertions.assertEquals(HttpStatus.UNPROCESSABLE_ENTITY.value(), response.getStatusCodeValue());

@@ -17,7 +17,7 @@ import org.springframework.http.ResponseEntity;
 import java.util.Optional;
 
 @ExtendWith(MockitoExtension.class)
-public class ScoreServiceTest {
+class ScoreServiceTest {
 
     @InjectMocks
     private ScoreService scoreService;
@@ -28,7 +28,7 @@ public class ScoreServiceTest {
     private Score score;
 
     @BeforeEach
-    public void setup() {
+    void setup() {
         scoreRequest = new ScoreRequest();
         scoreRequest.setScoreDescricao("Insuficiente");
         scoreRequest.setValorInicial(0);
@@ -41,20 +41,20 @@ public class ScoreServiceTest {
     }
 
     @Test
-    public void cadastrarScoreCreatedTest() {
+    void cadastrarScoreCreatedTest() {
         ResponseEntity response = scoreService.createScore(scoreRequest);
         Assertions.assertEquals(HttpStatus.CREATED.value(), response.getStatusCodeValue());
     }
 
     @Test
-    public void cadastrarScoreUnprocessableEntityTest() {
+    void cadastrarScoreUnprocessableEntityTest() {
         Mockito.when(scoreRepository.save(Mockito.any(Score.class))).thenThrow(NullPointerException.class);
         ResponseEntity response = scoreService.createScore(scoreRequest);
         Assertions.assertEquals(HttpStatus.UNPROCESSABLE_ENTITY.value(), response.getStatusCodeValue());
     }
 
     @Test
-    public void getDescricaoScoreTest() {
+    void getDescricaoScoreTest() {
         Mockito.when(scoreRepository.buscarScoreEntreValorInicialEFinal(Mockito.anyInt()))
                 .thenReturn(Optional.of(score));
 
@@ -63,7 +63,7 @@ public class ScoreServiceTest {
     }
 
     @Test
-    public void getDescricaoScoreEmptyTest() {
+    void getDescricaoScoreEmptyTest() {
         Mockito.when(scoreRepository.buscarScoreEntreValorInicialEFinal(Mockito.anyInt()))
                 .thenReturn(Optional.empty());
 
@@ -72,7 +72,7 @@ public class ScoreServiceTest {
     }
 
     @Test
-    public void getDescricaoScoreExceptionTest() {
+    void getDescricaoScoreExceptionTest() {
 
         Mockito.when(scoreRepository.buscarScoreEntreValorInicialEFinal(Mockito.anyInt()))
                 .thenThrow(NullPointerException.class);
