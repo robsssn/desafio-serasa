@@ -31,6 +31,7 @@ public class SwaggerConfig {
                 .apis(RequestHandlerSelectors.basePackage("com.serasa.score.controller"))
                 .paths(PathSelectors.regex("/.*"))
                 .build()
+                .useDefaultResponseMessages(false)
                 .securityContexts(Arrays.asList(securityContext()))
                 .securitySchemes(Arrays.asList(apiKey()))
                 .apiInfo(getApiInfo());

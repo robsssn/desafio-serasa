@@ -2,11 +2,13 @@ package com.serasa.score.controller;
 
 import com.serasa.score.consts.ResponseCodesConsts;
 import com.serasa.score.domain.request.PessoaRequest;
-import com.serasa.score.domain.response.PessoaResponse;
+import com.serasa.score.domain.response.PessoaGetAllResponse;
+import com.serasa.score.domain.response.PessoaGetByIdResponse;
 import com.serasa.score.service.PessoaService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
+import java.util.List;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
@@ -29,21 +32,35 @@ public class PessoaController {
     private PessoaService pessoaService;
 
     @ApiOperation(value = "Lista todas pessoas cadastradas")
-    @ApiResponse(code = ResponseCodesConsts.UNPROCESSABLE_ENTITY_CODE, message = ResponseCodesConsts.UNPROCESSABLE_ENTITY_MESSAGE)
+    @ApiResponses(value = {
+            @ApiResponse(code = ResponseCodesConsts.OK_CODE, message = ResponseCodesConsts.OK_MESSAGE, response = PessoaGetAllResponse.class),
+            @ApiResponse(code = ResponseCodesConsts.UNPROCESSABLE_ENTITY_CODE, message = ResponseCodesConsts.UNPROCESSABLE_ENTITY_MESSAGE),
+            @ApiResponse(code = ResponseCodesConsts.FORBIDDEN_CODE, message = ResponseCodesConsts.FORBIDDEN_MESSAGE),
+            @ApiResponse(code = ResponseCodesConsts.NO_CONTENT_CODE, message = ResponseCodesConsts.NO_CONTENT_MESSAGE)
+    })
     @GetMapping
-    public ResponseEntity getPessoas() {
+    public ResponseEntity<List<PessoaGetAllResponse>> getPessoas() {
         return pessoaService.getPessoas();
     }
 
     @ApiOperation(value = "Lista uma pessoa por id")
-    @ApiResponse(code = ResponseCodesConsts.UNPROCESSABLE_ENTITY_CODE, message = ResponseCodesConsts.UNPROCESSABLE_ENTITY_MESSAGE)
+    @ApiResponses(value = {
+            @ApiResponse(code = ResponseCodesConsts.OK_CODE, message = ResponseCodesConsts.OK_MESSAGE, response = PessoaGetByIdResponse.class),
+            @ApiResponse(code = ResponseCodesConsts.FORBIDDEN_CODE, message = ResponseCodesConsts.FORBIDDEN_MESSAGE),
+            @ApiResponse(code = ResponseCodesConsts.UNPROCESSABLE_ENTITY_CODE, message = ResponseCodesConsts.UNPROCESSABLE_ENTITY_MESSAGE),
+            @ApiResponse(code = ResponseCodesConsts.NO_CONTENT_CODE, message = ResponseCodesConsts.NO_CONTENT_MESSAGE)
+    })
     @GetMapping("/{id}")
-    public ResponseEntity<PessoaResponse> getPessoa(@PathVariable Long id) {
+    public ResponseEntity<PessoaGetByIdResponse> getPessoa(@PathVariable Long id) {
         return pessoaService.getPessoaById(id);
     }
 
     @ApiOperation(value = "Cadastra pessoa", consumes = APPLICATION_JSON_VALUE)
-    @ApiResponse(code = ResponseCodesConsts.UNPROCESSABLE_ENTITY_CODE, message = ResponseCodesConsts.UNPROCESSABLE_ENTITY_MESSAGE)
+    @ApiResponses(value = {
+            @ApiResponse(code = ResponseCodesConsts.CREATED_CODE, message = ResponseCodesConsts.CREATED_MESSAGE),
+            @ApiResponse(code = ResponseCodesConsts.FORBIDDEN_CODE, message = ResponseCodesConsts.FORBIDDEN_MESSAGE),
+            @ApiResponse(code = ResponseCodesConsts.UNPROCESSABLE_ENTITY_CODE, message = ResponseCodesConsts.UNPROCESSABLE_ENTITY_MESSAGE)
+    })
     @PostMapping(consumes = APPLICATION_JSON_VALUE)
     public ResponseEntity createPessoa(@RequestBody @Valid PessoaRequest pessoaRequest) {
 

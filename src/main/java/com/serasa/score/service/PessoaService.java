@@ -3,7 +3,8 @@ package com.serasa.score.service;
 import com.serasa.score.domain.entity.Pessoa;
 import com.serasa.score.domain.enums.Regiao;
 import com.serasa.score.domain.request.PessoaRequest;
-import com.serasa.score.domain.response.PessoaResponse;
+import com.serasa.score.domain.response.PessoaGetAllResponse;
+import com.serasa.score.domain.response.PessoaGetByIdResponse;
 import com.serasa.score.repository.PessoaRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +30,7 @@ public class PessoaService {
     @Autowired
     private ScoreService scoreService;
 
-    public ResponseEntity<List<PessoaResponse>> getPessoas() {
+    public ResponseEntity<List<PessoaGetAllResponse>> getPessoas() {
 
         try {
             List<Pessoa> pessoaList = pessoaRepository.findAll();
@@ -38,8 +39,8 @@ public class PessoaService {
                 return ResponseEntity.noContent().build();
             }
 
-            final List<PessoaResponse> pessoaResponseList = pessoaList.stream()
-                    .map(p -> convertEntityToResponse(p))
+            final List<PessoaGetAllResponse> pessoaResponseList = pessoaList.stream()
+                    .map(p -> convertEntityToPessoaGetAllResponse(p))
                     .collect(Collectors.toList());
 
             return ResponseEntity.ok(pessoaResponseList);
@@ -50,7 +51,7 @@ public class PessoaService {
         }
     }
 
-    public ResponseEntity<PessoaResponse> getPessoaById(Long id) {
+    public ResponseEntity<PessoaGetByIdResponse> getPessoaById(Long id) {
 
         try {
             Optional<Pessoa> pessoaOptional = pessoaRepository.findById(id);
@@ -59,7 +60,7 @@ public class PessoaService {
                 return ResponseEntity.noContent().build();
             }
 
-            return ResponseEntity.ok().body(convertEntityToResponse(pessoaOptional.get()));
+            return ResponseEntity.ok().body(convertEntityToPessoaGetByIdResponse(pessoaOptional.get()));
 
         } catch (Exception e) {
             log.info(e.getMessage());
@@ -91,16 +92,25 @@ public class PessoaService {
         return pessoa;
     }
 
-    private PessoaResponse convertEntityToResponse(Pessoa pessoa) {
-        PessoaResponse pessoaResponse = new PessoaResponse();
-        pessoaResponse.setNome(pessoa.getNome());
-        pessoaResponse.setCidade(pessoa.getCidade());
-        pessoaResponse.setEstado(pessoa.getEstado());
-        pessoaResponse.setTelefone(pessoa.getTelefone());
-        pessoaResponse.setIdade(pessoa.getIdade());
-        pessoaResponse.setScoreDescricao(scoreService.getDescricaoScore(pessoa.getScore()));
-        pessoaResponse.setEstados(afinidadeService.buscarEstadosAfinidadePorRegiao(pessoa.getRegiao()));
+    private PessoaGetAllResponse convertEntityToPessoaGetAllResponse(Pessoa pessoa) {
+        PessoaGetAllResponse pessoaGetAllResponse = new PessoaGetAllResponse();
+        pessoaGetAllResponse.setNome(pessoa.getNome());
+        pessoaGetAllResponse.setCidade(pessoa.getCidade());
+        pessoaGetAllResponse.setEstado(pessoa.getEstado());
+        pessoaGetAllResponse.setScoreDescricao(scoreService.getDescricaoScore(pessoa.getScore()));
+        pessoaGetAllResponse.setEstados(afinidadeService.buscarEstadosAfinidadePorRegiao(pessoa.getRegiao()));
 
-        return pessoaResponse;
+        return pessoaGetAllResponse;
+    }
+
+    private PessoaGetByIdResponse convertEntityToPessoaGetByIdResponse(Pessoa pessoa) {
+        PessoaGetByIdResponse pessoaGetByIdResponse = new PessoaGetByIdResponse();
+        pessoaGetByIdResponse.setNome(pessoa.getNome());
+        pessoaGetByIdResponse.setTelefone(pessoa.getTelefone());
+        pessoaGetByIdResponse.setIdade(pessoa.getIdade());
+        pessoaGetByIdResponse.setScoreDescricao(scoreService.getDescricaoScore(pessoa.getScore()));
+        pessoaGetByIdResponse.setEstados(afinidadeService.buscarEstadosAfinidadePorRegiao(pessoa.getRegiao()));
+
+        return pessoaGetByIdResponse;
     }
 }

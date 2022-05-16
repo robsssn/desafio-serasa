@@ -4,6 +4,8 @@ import com.serasa.score.domain.entity.Pessoa;
 import com.serasa.score.domain.enums.Regiao;
 import com.serasa.score.domain.enums.UnidadeFederacao;
 import com.serasa.score.domain.request.PessoaRequest;
+import com.serasa.score.domain.response.PessoaGetAllResponse;
+import com.serasa.score.domain.response.PessoaGetByIdResponse;
 import com.serasa.score.domain.response.PessoaResponse;
 import com.serasa.score.repository.PessoaRepository;
 import org.junit.jupiter.api.Assertions;
@@ -81,7 +83,7 @@ class PessoaServiceTest {
     @Test
     void listarPessoasOkTest() {
         Mockito.when(pessoaRepository.findAll()).thenReturn(pessoaList);
-        ResponseEntity<List<PessoaResponse>> response = pessoaService.getPessoas();
+        ResponseEntity<List<PessoaGetAllResponse>> response = pessoaService.getPessoas();
         Assertions.assertNotNull(response.getBody());
         Assertions.assertEquals(HttpStatus.OK.value(), response.getStatusCodeValue());
     }
@@ -89,21 +91,21 @@ class PessoaServiceTest {
     @Test
     void listarPessoasNoContentTest() {
         Mockito.when(pessoaRepository.findAll()).thenReturn(Collections.emptyList());
-        ResponseEntity<List<PessoaResponse>> response = pessoaService.getPessoas();
+        ResponseEntity<List<PessoaGetAllResponse>> response = pessoaService.getPessoas();
         Assertions.assertEquals(HttpStatus.NO_CONTENT.value(), response.getStatusCodeValue());
     }
 
     @Test
     void listarPessoasUnprocessableEntityTest() {
         Mockito.when(pessoaRepository.findAll()).thenThrow(NullPointerException.class);
-        ResponseEntity<List<PessoaResponse>> response = pessoaService.getPessoas();
+        ResponseEntity<List<PessoaGetAllResponse>> response = pessoaService.getPessoas();
         Assertions.assertEquals(HttpStatus.UNPROCESSABLE_ENTITY.value(), response.getStatusCodeValue());
     }
 
     @Test
     void listarPessoaPorIdOkTest() {
         Mockito.when(pessoaRepository.findById(Mockito.anyLong())).thenReturn(Optional.of(pessoa));
-        ResponseEntity<PessoaResponse> response = pessoaService.getPessoaById(1L);
+        ResponseEntity<PessoaGetByIdResponse> response = pessoaService.getPessoaById(1L);
         Assertions.assertNotNull(response.getBody());
         Assertions.assertEquals(HttpStatus.OK.value(), response.getStatusCodeValue());
     }
@@ -111,14 +113,14 @@ class PessoaServiceTest {
     @Test
     void listarPessoaPorIdNoContentTest() {
         Mockito.when(pessoaRepository.findById(Mockito.anyLong())).thenReturn(Optional.empty());
-        ResponseEntity<PessoaResponse> response = pessoaService.getPessoaById(1L);
+        ResponseEntity<PessoaGetByIdResponse> response = pessoaService.getPessoaById(1L);
         Assertions.assertEquals(HttpStatus.NO_CONTENT.value(), response.getStatusCodeValue());
     }
 
     @Test
     void listarPessoaPorIdUnprocessableEntityTest() {
         Mockito.when(pessoaRepository.findById(Mockito.anyLong())).thenThrow(NullPointerException.class);
-        ResponseEntity<PessoaResponse> response = pessoaService.getPessoaById(1L);
+        ResponseEntity<PessoaGetByIdResponse> response = pessoaService.getPessoaById(1L);
         Assertions.assertEquals(HttpStatus.UNPROCESSABLE_ENTITY.value(), response.getStatusCodeValue());
     }
 

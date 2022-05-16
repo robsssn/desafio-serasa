@@ -6,6 +6,7 @@ import com.serasa.score.service.AfinidadeService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -24,7 +25,11 @@ public class AfinidadeController {
     private AfinidadeService afinidadeService;
 
     @ApiOperation(value = "Cadastra afinidade", consumes = APPLICATION_JSON_VALUE)
-    @ApiResponse(code = ResponseCodesConsts.UNPROCESSABLE_ENTITY_CODE, message = ResponseCodesConsts.UNPROCESSABLE_ENTITY_MESSAGE)
+    @ApiResponses(value = {
+            @ApiResponse(code = ResponseCodesConsts.CREATED_CODE, message = ResponseCodesConsts.CREATED_MESSAGE),
+            @ApiResponse(code = ResponseCodesConsts.UNPROCESSABLE_ENTITY_CODE, message = ResponseCodesConsts.UNPROCESSABLE_ENTITY_MESSAGE),
+            @ApiResponse(code = ResponseCodesConsts.FORBIDDEN_CODE, message = ResponseCodesConsts.FORBIDDEN_MESSAGE)
+    })
     @PostMapping(consumes = APPLICATION_JSON_VALUE)
     public ResponseEntity cadastrarAfinidade(@RequestBody AfinidadeRequest afinidadeRequest) {
 
